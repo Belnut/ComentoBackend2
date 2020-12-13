@@ -20,6 +20,4 @@ public class GetService {
     public LoginLookupBase<CountOfPeriodVO> getLoginCountDaily(LocalDate startDate, LocalDate endDate) {
         return null;
     }
-
-    //TODO : 부서별 월별 조회 어떻게 만들지...? 아이디어가 너무 많음
 }
