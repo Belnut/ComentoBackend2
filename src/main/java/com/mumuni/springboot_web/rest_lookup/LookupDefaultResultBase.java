@@ -11,10 +11,10 @@ import java.util.List;
 
 
 @Getter @Setter @AllArgsConstructor
-public abstract class DefaultLookupBase <T>{
+public abstract class LookupDefaultResultBase<T>{
     private int resultCode;
     private LocalDateTime requestTime;
     private String order;
-    private int count;
+    private int totalCount;
     private List<T> data;
 }

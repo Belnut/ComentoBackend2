@@ -21,6 +21,4 @@
         ) as A
         group by A.date;
     </select>
-
-
 </mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- TODO: 질문: 중복되는 쿼리문들은 1.조건을 이용하여 중복을 최소화, 2.내용이 중복되어도 새로 만듬 (아래 상단 2개의 쿼리문)-->
+<mapper namespace="com.mumuni.springboot_web.dao.LookupMapper">
+<!-- Long getOrderCount(Map<String, String> map) -->
+    <select id="getOrderCountExceptWeekend" parameterType="map" resultType="long">
+        select count(c.REQUESTCODE) as count from
+	        (
+	            select hist.REQUESTCODE, hist.USERID, hist.CREATE_DATE from RequestHistory as hist
+		            inner join
+			            (select REQUESTCODE from RequestCode where CODEEXPLAIN like #{order}) as cmd
+		            on
+			            hist.REQUESTCODE = cmd.REQUESTCODE
+		                AND DAYOFWEEK(hist.CREATE_DATE) != 7 AND DAYOFWEEK(hist.CREATE_DATE) != 1
+		    ) as c
+    </select>
+
+	<select id="getOrderCount" parameterType="map" resultType="long">
+		select count(c.REQUESTCODE) as count from
+		(
+				select hist.REQUESTCODE, hist.USERID, hist.CREATE_DATE from RequestHistory as hist
+					inner join
+						(select REQUESTCODE from RequestCode where CODEEXPLAIN like #{order}) as cmd
+					on
+						hist.REQUESTCODE = cmd.REQUESTCODE
+						AND CREATE_DATE >=#{startDate} AND #{endDate} > CREATE_DATE
+		) as c
+	</select>
+</mapper>

@@ -11,6 +11,6 @@ import java.util.List;
 public class DefaultTestResultBase<T>{
     private int resultCode;
     private LocalDateTime requestTime;
-    private int count;
+    private int totalCount;
     private List<T> data;
 }
