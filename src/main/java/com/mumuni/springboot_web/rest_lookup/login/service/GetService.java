@@ -1,6 +1,6 @@
 package com.mumuni.springboot_web.rest_lookup.login.service;
 
-import com.mumuni.springboot_web.rest_lookup._vo.CountOfPeriodVO;
+import com.mumuni.springboot_web.rest_lookup.vo.CountOfPeriodVO;
 import com.mumuni.springboot_web.rest_lookup.login.LoginLookupBase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
