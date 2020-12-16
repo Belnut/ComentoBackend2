@@ -39,3 +39,8 @@
   - Request Result 반환 재설계 (Sinlge or List)
   - sql 내용 일부 변경
   - log 기능 일부 추가
+  
+#### december 17
+- 변경점 (develop branch)
+  - LookupMapper Logging 연결
+  - sql 에러 수정 (mybatis dynamic sql grammar error)

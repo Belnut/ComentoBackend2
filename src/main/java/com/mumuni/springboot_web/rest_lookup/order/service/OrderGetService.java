@@ -26,7 +26,7 @@ public class OrderGetService {
             map.put("order", order);
             if(exceptWeekend) map.put("execptWeeked", exceptWeekend);
 
-            Long count = lookupMapper.getOrderCountExceptWeekend(map);
+            Long count = lookupMapper.getOrderCount(map);
             List<HashMap<String, Long>> data = new LinkedList<>();
             HashMap<String, Long> hm = new HashMap<>();
             hm.put("count", count);
@@ -35,7 +35,7 @@ public class OrderGetService {
 
             vo = LookupOrderDefaultListResultBase.<HashMap<String, Long>>builder()
                     .resultCode(200)
-                    .order("*")
+                    .order(order)
                     .requestTime(LocalDateTime.now())
                     .data(data)
                     .totalCount(data.size())
@@ -43,7 +43,7 @@ public class OrderGetService {
         } catch (DateTimeParseException e) {
             vo = LookupOrderDefaultListResultBase.<HashMap<String, Long>>builder()
                     .resultCode(410)
-                    .order("*")
+                    .order(order)
                     .requestTime(LocalDateTime.now())
                     .data(null)
                     .totalCount(0)
@@ -51,7 +51,7 @@ public class OrderGetService {
         } catch (Exception e) {
             vo = LookupOrderDefaultListResultBase.<HashMap<String, Long>>builder()
                     .resultCode(444)
-                    .order("*")
+                    .order(order)
                     .requestTime(LocalDateTime.now())
                     .data(null)
                     .totalCount(0)
@@ -61,6 +61,7 @@ public class OrderGetService {
         return vo;
     }
 
+    //TODO: 쿼리문 추가 필요
     public LookupOrderDefaultListResultBase<HashMap<String, Double>> getAverageCountOfOrderPerDay(
             String order, String startDate, String endDate) {
         LookupOrderDefaultListResultBase<HashMap<String, Double>> vo;
@@ -68,7 +69,7 @@ public class OrderGetService {
             LocalDate sDate = LocalDate.parse(startDate);
             LocalDate eDate = LocalDate.parse(endDate);
 
-            HashMap<String, String> map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("order", order);
             map.put("startDate", sDate.toString());
             map.put("endDate", eDate.toString());
