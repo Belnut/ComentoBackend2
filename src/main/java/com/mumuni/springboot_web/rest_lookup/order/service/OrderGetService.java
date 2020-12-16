@@ -1,10 +1,7 @@
 package com.mumuni.springboot_web.rest_lookup.order.service;
 
 import com.mumuni.springboot_web.dao.LookupMapper;
-import com.mumuni.springboot_web.rest_lookup.connection.LookupConnectionDefaultResultBase;
-import com.mumuni.springboot_web.rest_lookup.type.PeriodIntervalType;
-import com.mumuni.springboot_web.rest_lookup.vo.CountOfPeriodVO;
-import com.mumuni.springboot_web.rest_lookup.order.LookupOrderDefaultResultBase;
+import com.mumuni.springboot_web.rest_lookup.order.LookupOrderDefaultListResultBase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,19 +19,21 @@ public class OrderGetService {
     private final LookupMapper lookupMapper;
 
     //TODO : DAO 연결할 것
-    public LookupOrderDefaultResultBase<HashMap<String, Long>> getOrderCountExceptWeekend(String order) {
-        LookupOrderDefaultResultBase<HashMap<String, Long>> vo;
+    public LookupOrderDefaultListResultBase<HashMap<String, Long>> getOrderCount(String order, boolean exceptWeekend) {
+        LookupOrderDefaultListResultBase<HashMap<String, Long>> vo;
         try {
-            HashMap<String, String> map = new HashMap<>();
+            HashMap<String, Object> map = new HashMap<>();
             map.put("order", order);
+            if(exceptWeekend) map.put("execptWeeked", exceptWeekend);
 
             Long count = lookupMapper.getOrderCountExceptWeekend(map);
             List<HashMap<String, Long>> data = new LinkedList<>();
             HashMap<String, Long> hm = new HashMap<>();
             hm.put("count", count);
+
             data.add(hm);
 
-            vo = LookupOrderDefaultResultBase.<HashMap<String, Long>>builder()
+            vo = LookupOrderDefaultListResultBase.<HashMap<String, Long>>builder()
                     .resultCode(200)
                     .order("*")
                     .requestTime(LocalDateTime.now())
@@ -42,7 +41,7 @@ public class OrderGetService {
                     .totalCount(data.size())
                     .build();
         } catch (DateTimeParseException e) {
-            vo = LookupOrderDefaultResultBase.<HashMap<String, Long>>builder()
+            vo = LookupOrderDefaultListResultBase.<HashMap<String, Long>>builder()
                     .resultCode(410)
                     .order("*")
                     .requestTime(LocalDateTime.now())
@@ -50,7 +49,7 @@ public class OrderGetService {
                     .totalCount(0)
                     .build();
         } catch (Exception e) {
-            vo = LookupOrderDefaultResultBase.<HashMap<String, Long>>builder()
+            vo = LookupOrderDefaultListResultBase.<HashMap<String, Long>>builder()
                     .resultCode(444)
                     .order("*")
                     .requestTime(LocalDateTime.now())
@@ -62,9 +61,9 @@ public class OrderGetService {
         return vo;
     }
 
-    public LookupOrderDefaultResultBase<HashMap<String, Double>> getAverageCountOfOrderPerDay(
+    public LookupOrderDefaultListResultBase<HashMap<String, Double>> getAverageCountOfOrderPerDay(
             String order, String startDate, String endDate) {
-        LookupOrderDefaultResultBase<HashMap<String, Double>> vo;
+        LookupOrderDefaultListResultBase<HashMap<String, Double>> vo;
         try {
             LocalDate sDate = LocalDate.parse(startDate);
             LocalDate eDate = LocalDate.parse(endDate);
@@ -83,7 +82,7 @@ public class OrderGetService {
             hm.put("average", average);
             data.add(hm);
 
-            vo = LookupOrderDefaultResultBase.<HashMap<String, Double>>builder()
+            vo = LookupOrderDefaultListResultBase.<HashMap<String, Double>>builder()
                     .resultCode(200)
                     .order("*")
                     .requestTime(LocalDateTime.now())
@@ -91,7 +90,7 @@ public class OrderGetService {
                     .totalCount(data.size())
                     .build();
         } catch (DateTimeParseException e) {
-            vo = LookupOrderDefaultResultBase.<HashMap<String, Double>>builder()
+            vo = LookupOrderDefaultListResultBase.<HashMap<String, Double>>builder()
                     .resultCode(410)
                     .order("*")
                     .requestTime(LocalDateTime.now())
@@ -99,7 +98,7 @@ public class OrderGetService {
                     .totalCount(0)
                     .build();
         } catch (Exception e) {
-            vo = LookupOrderDefaultResultBase.<HashMap<String, Double>>builder()
+            vo = LookupOrderDefaultListResultBase.<HashMap<String, Double>>builder()
                     .resultCode(444)
                     .order("*")
                     .requestTime(LocalDateTime.now())

@@ -4,21 +4,21 @@
 
 <mapper namespace="com.mumuni.springboot_web.dao.LookupMapper">
     <select id="getConnectionCountMonthly" parameterType="map" resultType="CountOfPeriodVO">
-        select A.date, COUNT(*) as count from
+        select A.create_at, COUNT(*) as totalcount from
         (
-        SELECT distinct DATE_FORMAT(CREATE_DATE,'%Y-%m') date, USERID
-        FROM RequestHistory
+        SELECT distinct DATE_FORMAT(CREATE_DATE,'%Y-%m') as create_at, USERID
+        FROM REQUESTHISTORY_TB
         WHERE CREATE_DATE>= #{startDate} AND #{endDate} > CREATE_DATE
         ) as A
-        group by A.date;
+        group by A.create_at;
     </select>
     <select id="getConnectionCountDaily" parameterType="map" resultType="CountOfPeriodVO">
-        select A.date, COUNT(*) as count from
+        select A.create_at, COUNT(*) as total_count from
         (
-        SELECT distinct DATE_FORMAT(CREATE_DATE,'%Y-%m-%d') date, USERID
-        FROM RequestHistory
+        SELECT distinct DATE_FORMAT(CREATE_DATE,'%Y-%m-%d') create_at, USERID
+        FROM REQUESTHISTORY_TB
         WHERE CREATE_DATE>= #{startDate} AND #{endDate} > CREATE_DATE
         ) as A
-        group by A.date;
+        group by A.create_at;
     </select>
 </mapper>

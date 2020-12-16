@@ -10,13 +10,14 @@ import java.util.Map;
 @Repository
 @Mapper
 public interface LookupMapper {
-    Long getOrderCountExceptWeekend(Map<String, String> map);
+    Long getOrderCountExceptWeekend(Map<String, Object> map);
 
-    List<CountOfPeriodVO> getConnectionCountMonthly(Map<String, String> map);
+    List<CountOfPeriodVO> getConnectionCountMonthly(Map<String, Object> map);
     List<CountOfPeriodVO> getConnectionCountDaily(Map<String, String> map);
 
     //List<CountOfPeriodVO> getOrderCountMonthly(Map<String, String> map);
     //List<CountOfPeriodVO> getOrderCountDaily(Map<String, String> map);
 
     Long getOrderCount(Map<String, String> map);
+    List<CountOfPeriodVO> getOrderCountByTeam(Map<String, Object> map);
 }

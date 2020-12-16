@@ -5,15 +5,18 @@
 <mapper namespace="com.mumuni.springboot_web.dao.LookupMapper">
 <!-- Long getOrderCount(Map<String, String> map) -->
     <select id="getOrderCountExceptWeekend" parameterType="map" resultType="long">
-        select count(c.REQUESTCODE) as count from
-	        (
-	            select hist.REQUESTCODE, hist.USERID, hist.CREATE_DATE from RequestHistory as hist
-		            inner join
-			            (select REQUESTCODE from RequestCode where CODEEXPLAIN like #{order}) as cmd
-		            on
-			            hist.REQUESTCODE = cmd.REQUESTCODE
-		                AND DAYOFWEEK(hist.CREATE_DATE) != 7 AND DAYOFWEEK(hist.CREATE_DATE) != 1
-		    ) as c
+		select count(*) as total_count, date_format(r.CREATE_DATE, '%Y-%m') as create_at
+		from REQUESTHISTORY_TB as r
+		inner join USERINFO_TB as u on r.USERID = u.USERID
+		inner join TEAMINFO_TB as t on u.TEAMCODE = t.TEAMCODE
+		inner join REQUESTCODEINFO_TB as c on c.REQUESTCODE = r.REQUESTCODE
+			and c.CODEEXPLAIN like #{order}
+			and r.CREATE_DATE >= '2020-01-01'
+			and '2021-01-01' > r.CREATE_DATE
+			<if test="#{exceptWeekend} != null">
+				AND DAYOFWEEK(r.CREATE_DATE) != 7 AND DAYOFWEEK(r.CREATE_DATE) != 1
+			</if>
+		group by create_at order by create_at
     </select>
 
 	<select id="getOrderCount" parameterType="map" resultType="long">
