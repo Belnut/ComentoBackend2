@@ -12,12 +12,12 @@ import java.util.Map;
 @Mapper
 public interface LookupMapper {
 
-    List<CountOfPeriodVO> getConnectionCountMonthly(Map<String, Object> map);
-    List<CountOfPeriodVO> getConnectionCountDaily(Map<String, String> map);
+    // List Type
+    List<CountOfPeriodVO> getConnectionCounts(Map<String, Object> map);
+    List<CountOfPeriodVO> getOrderCounts(Map<String, Object> map);
 
-    //List<CountOfPeriodVO> getOrderCountMonthly(Map<String, String> map);
-    //List<CountOfPeriodVO> getOrderCountDaily(Map<String, String> map);
+    //List<CountOfPeriodVO> getOrderCountByTeam(Map<String, Object> map);
 
+    //Single Type
     Long getOrderCount(Map<String, Object> map);
-    List<CountOfPeriodVO> getOrderCountByTeam(Map<String, Object> map);
 }

@@ -3,22 +3,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.mumuni.springboot_web.dao.LookupMapper">
-    <select id="getConnectionCountMonthly" parameterType="map" resultType="CountOfPeriodVO">
-        select A.create_at, COUNT(*) as totalcount from
-        (
-        SELECT distinct DATE_FORMAT(CREATE_DATE,'%Y-%m') as create_at, USERID
-        FROM REQUESTHISTORY_TB
-        WHERE CREATE_DATE>= #{startDate} AND #{endDate} > CREATE_DATE
-        ) as A
-        group by A.create_at;
-    </select>
-    <select id="getConnectionCountDaily" parameterType="map" resultType="CountOfPeriodVO">
-        select A.create_at, COUNT(*) as total_count from
-        (
-        SELECT distinct DATE_FORMAT(CREATE_DATE,'%Y-%m-%d') create_at, USERID
-        FROM REQUESTHISTORY_TB
-        WHERE CREATE_DATE>= #{startDate} AND #{endDate} > CREATE_DATE
-        ) as A
-        group by A.create_at;
+    <select id="getConnectionCounts" parameterType="map" resultType="CountOfPeriodVO">
+        select DATE_FORMAT(A.CREATE_DATE,#{dateFormat}) as create_at, COUNT(distinct A.USERID) as totalcount
+        from REQUESTHISTORY_TB as A
+        where A.CREATE_DATE > #{startDate} AND #{endDate} > A.CREATE_DATE
+        group by create_at;
     </select>
 </mapper>

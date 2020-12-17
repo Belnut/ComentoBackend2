@@ -9,4 +9,7 @@ public enum PeriodIntervalType {
 
     private int intValue;
     private String stringValue;
+
+    public static final String MonthFormat = "yyyy-MM";
+    public static final String DayFormat = "yyyy-MM-dd";
 }

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<!-- TODO: 질문: 중복되는 쿼리문들은 1.조건을 이용하여 중복을 최소화, 2.내용이 중복되어도 새로 만듬 (아래 상단 2개의 쿼리문)-->
 <mapper namespace="com.mumuni.springboot_web.dao.LookupMapper">
 <!-- Long getOrderCount(Map<String, String> map) -->
-    <select id="getOrderCount" parameterType="map" resultType="long">
+	<select id="getOrderCount" parameterType="map" resultType="long">
 		select count(*) as total_count
 		from REQUESTHISTORY_TB as r
 		inner join USERINFO_TB as u on r.USERID = u.USERID
@@ -17,8 +16,20 @@
 			<if test="startDate != null">
 				and #{endDate} > r.CREATE_DATE
 			</if>
-			<if test="exceptWeekend != null">
-				AND DAYOFWEEK(r.CREATE_DATE) != 7 AND DAYOFWEEK(r.CREATE_DATE) != 1
+			<if test="exceptDays != null">
+				<foreach item="days" index="index" collection="exceptDays" separator=" ">
+					AND DAYOFWEEK(r.CREATE_DATE) != #{days}
+				</foreach>
 			</if>
     </select>
+
+	<!-- FIXME: 나중에 추가 옵션을 달아주세요-->
+	<select id="getOrderCounts" parameterType="map" resultType="CountOfPeriodVO">
+		select DATE_FORMAT(r.CREATE_DATE, #{dateFormat}) as create_at, COUNT(distinct r.USERID) as totalcount
+        from REQUESTHISTORY_TB as r
+		inner join REQUESTCODEINFO_TB as c on c.REQUESTCODE = r.REQUESTCODE
+		and c.CODEEXPLAIN like #{order}
+		and CREATE_DATE>= #{startDate} AND #{endDate} > CREATE_DATE
+        group by create_at;
+	</select>
 </mapper>
