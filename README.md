@@ -7,7 +7,7 @@
 - 일자별 접속자 수 (OK)
 - 평균 하루 로그인 수 (OK)
 - 휴일을 제외한 로그인 수 (OK)
-- 부서별 월별 로그인 수 (NO)
+- 부서별 월별 로그인 수 (OK)
 
 ### 2. RestController를 활용하여 Rest API 구축
 - 월별 접속자 수 (OK)
@@ -21,6 +21,7 @@
 
 ### 기타
 
+#### december 13
 - TODO: 
   - 부서별 월별 로그인 수 기능 구현
   - API문서와 다른 API 수정
@@ -31,3 +32,19 @@
   - Mapper.xml 에서 중복되는 쿼리문들은 어떻게 하는 것이 더 나은가요?
     - 1.조건을 이용하여 중복을 최소화 
     - 2.내용이 중복되어도 새로 만듬 (아래 상단 2개의 쿼리문)
+
+#### december 16
+
+- 변경점 (develop branch)
+  - Request Result 반환 재설계 (Sinlge or List)
+  - sql 내용 일부 변경
+  - log 기능 일부 추가
+  
+#### december 17
+- 변경점 (develop branch)
+  - LookupMapper Logging 연결
+  - sql 에러 수정 (mybatis dynamic sql grammar error)
+
+#### december 18
+- 변경점 (develop, master branch)
+ - Lookup service, sql refactoring

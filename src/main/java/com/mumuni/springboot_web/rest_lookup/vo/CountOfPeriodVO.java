@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter @Setter
 public class CountOfPeriodVO {
-    int count;
-    String date;
+    int total_count;
+    String create_at;
     PeriodIntervalType intervalType;
 }

@@ -1,19 +1,24 @@
 package com.mumuni.springboot_web.rest_lookup.connection.service;
 
 import com.mumuni.springboot_web.dao.LookupMapper;
+import com.mumuni.springboot_web.rest_lookup.LookupDefaultListResult;
 import com.mumuni.springboot_web.rest_lookup.type.PeriodIntervalType;
 import com.mumuni.springboot_web.rest_lookup.vo.CountOfPeriodVO;
-import com.mumuni.springboot_web.rest_lookup.connection.LookupConnectionDefaultResultBase;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+@Slf4j
 @Service
 public class ConnectionGetService {
 
@@ -21,92 +26,67 @@ public class ConnectionGetService {
     private LookupMapper lookupMapper;
 
     //TODO: 질문1: Builder를 이렇게 사용해도 괜찮은가요?
-    public LookupConnectionDefaultResultBase<CountOfPeriodVO> getConnectionCountMonthly(int year) {
-        LookupConnectionDefaultResultBase<CountOfPeriodVO> vo;
+    public LookupDefaultListResult<CountOfPeriodVO>
+    getConnectionCounts(LocalDate date, PeriodIntervalType type) {
+        LookupDefaultListResult<CountOfPeriodVO> vo;
+        PeriodIntervalType period = type;
+        String dateFormat;
         try {
-            LocalDate sDate = LocalDate.of(year, 1,1);
-            LocalDate eDate = LocalDate.of(year+1, 1,1);
+            LocalDate startDate, endDate;
+            switch(type) {
+                case MONTH:
+                    startDate = date.withMonth(1).withDayOfMonth(1);
+                    endDate = date.plusYears(1).withMonth(1).withDayOfMonth(1);
+                    dateFormat = "%Y-%m";
+                    break;
+                case DAY:
+                    startDate = date.withDayOfMonth(1);
+                    endDate = date.plusMonths(1).withDayOfMonth(1);
+                    dateFormat = "%Y-%m-%d";
+                    break;
+                default:
+                    throw new Exception("Unknown PeriodIntervalType : " + type);
+            }
 
-            HashMap<String,String> map = new HashMap<>();
-            map.put("startDate", sDate.toString());
-            map.put("endDate", eDate.toString());
-            List<CountOfPeriodVO> data = lookupMapper.getConnectionCountMonthly(map);
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("startDate", startDate.toString());
+            map.put("endDate", endDate.toString());
+            map.put("dateFormat", dateFormat);
+
+            List<CountOfPeriodVO> data = lookupMapper.getConnectionCounts(map);
 
             Iterator<CountOfPeriodVO> itr = data.iterator();
             while(itr.hasNext()) {
                 itr.next().setIntervalType(PeriodIntervalType.MONTH);
             }
 
-            vo = LookupConnectionDefaultResultBase.<CountOfPeriodVO> builder()
+            vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
                     .resultCode(200)
                     .order("*")
                     .requestTime(LocalDateTime.now())
                     .data(data)
                     .totalCount(data.size())
                     .build();
+            log.info("Success to run getConnectionCountMonthly");
         }catch(DateTimeParseException e) {
-            vo = LookupConnectionDefaultResultBase.<CountOfPeriodVO> builder()
+            vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
                     .resultCode(410)
                     .order("*")
                     .requestTime(LocalDateTime.now())
                     .data(null)
                     .totalCount(0)
                     .build();
+            log.error("Fail to run getConnectionCountMonthly -> ", e);
         }catch (Exception e) {
-            vo = LookupConnectionDefaultResultBase.<CountOfPeriodVO> builder()
+            vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
                     .resultCode(444)
                     .order("*")
                     .requestTime(LocalDateTime.now())
                     .data(null)
                     .totalCount(0)
                     .build();
+            log.error("Fail to run getConnectionCountMonthly -> ", e);
         }
-
-        return vo;
-    }
-
-    public LookupConnectionDefaultResultBase<CountOfPeriodVO> getConnectionCountDaily
-            (int year, int month) {
-        LookupConnectionDefaultResultBase<CountOfPeriodVO> vo;
-        try {
-            LocalDate sDate = LocalDate.of(year, month,1);
-            LocalDate eDate = LocalDate.of(year, month+1,1);
-
-            HashMap<String,String> map = new HashMap<>();
-            map.put("startDate", sDate.toString());
-            map.put("endDate", eDate.toString());
-            List<CountOfPeriodVO> data = lookupMapper.getConnectionCountDaily(map);
-
-            Iterator<CountOfPeriodVO> itr = data.iterator();
-            while(itr.hasNext()) {
-                itr.next().setIntervalType(PeriodIntervalType.DAY);
-            }
-
-            vo = LookupConnectionDefaultResultBase.<CountOfPeriodVO> builder()
-                    .resultCode(200)
-                    .order("*")
-                    .requestTime(LocalDateTime.now())
-                    .data(data)
-                    .totalCount(data.size())
-                    .build();
-        }catch(DateTimeParseException e) {
-            vo = LookupConnectionDefaultResultBase.<CountOfPeriodVO> builder()
-                    .resultCode(410)
-                    .order("*")
-                    .requestTime(LocalDateTime.now())
-                    .data(null)
-                    .totalCount(0)
-                    .build();
-        }catch (Exception e) {
-            vo = LookupConnectionDefaultResultBase.<CountOfPeriodVO> builder()
-                    .resultCode(444)
-                    .order("*")
-                    .requestTime(LocalDateTime.now())
-                    .data(null)
-                    .totalCount(0)
-                    .build();
-        }
-
         return vo;
     }
 }
