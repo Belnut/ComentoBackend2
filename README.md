@@ -44,3 +44,7 @@
 - 변경점 (develop branch)
   - LookupMapper Logging 연결
   - sql 에러 수정 (mybatis dynamic sql grammar error)
+
+#### december 18
+- 변경점 (develop, master branch)
+ - Lookup service, sql refactoring
