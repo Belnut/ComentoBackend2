@@ -29,7 +29,6 @@ public class ConnectionGetService {
     public LookupDefaultListResult<CountOfPeriodVO>
     getConnectionCounts(LocalDate date, PeriodIntervalType type) {
         LookupDefaultListResult<CountOfPeriodVO> vo;
-        PeriodIntervalType period = type;
         String dateFormat;
         try {
             LocalDate startDate, endDate;
@@ -57,17 +56,17 @@ public class ConnectionGetService {
 
             Iterator<CountOfPeriodVO> itr = data.iterator();
             while(itr.hasNext()) {
-                itr.next().setIntervalType(PeriodIntervalType.MONTH);
+                itr.next().setIntervalType(type);
             }
 
             vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
                     .resultCode(200)
-                    .order("*")
+                    .order("connect")
                     .requestTime(LocalDateTime.now())
                     .data(data)
                     .totalCount(data.size())
                     .build();
-            log.info("Success to run getConnectionCountMonthly");
+            log.info("Success to run getOrderCounts");
         }catch(DateTimeParseException e) {
             vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
                     .resultCode(410)
@@ -76,7 +75,7 @@ public class ConnectionGetService {
                     .data(null)
                     .totalCount(0)
                     .build();
-            log.error("Fail to run getConnectionCountMonthly -> ", e);
+            log.error("Fail to run getOrderCounts -> ", e);
         }catch (Exception e) {
             vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
                     .resultCode(444)
@@ -85,7 +84,7 @@ public class ConnectionGetService {
                     .data(null)
                     .totalCount(0)
                     .build();
-            log.error("Fail to run getConnectionCountMonthly -> ", e);
+            log.error("Fail to run getOrderCounts -> ", e);
         }
         return vo;
     }

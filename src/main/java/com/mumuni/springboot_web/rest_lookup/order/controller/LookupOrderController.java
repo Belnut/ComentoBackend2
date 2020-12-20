@@ -30,21 +30,29 @@ public class LookupOrderController {
     @GetMapping("average/daily")
     public LookupDefaultSingleResult<HashMap<String, Double>> orderAverageCountPerDay
             (@PathVariable("order") String order,
-             @RequestParam(value = "startDate", required = true ) String startDate,
-             @RequestParam(value = "endDate", required = false ) String endDate) {
+             @RequestParam(value = "start_date", required = true ) String startDate,
+             @RequestParam(value = "end_date", required = false ) String endDate) {
         if(endDate == null) endDate = LocalDate.now().toString();
         LookupDefaultSingleResult<HashMap<String, Double>> requestVO = getService.getAverageCountPerDay(order, startDate, endDate);
         return requestVO;
     }
 
     @GetMapping("count/monthly")
-    public LookupDefaultListResult<TeamListVO<CountOfPeriodVO>> orderCountMonthly
+    public LookupDefaultListResult<? extends Object> orderCountMonthly
             (@PathVariable("order") String order,
              @RequestParam Integer year,
-             @RequestParam(value = "team_codes", required = true ) List<String> teamCodes) {
+             @RequestParam(value = "team_codes", required = false) List<String> teamCodes) {
         LocalDate target_date = LocalDate.of(year, 1, 1);
-        LookupDefaultListResult<TeamListVO<CountOfPeriodVO>>
-                requestVO = getService.getOrderCountsByTeam (order, teamCodes,target_date, PeriodIntervalType.MONTH);
-        return requestVO;
+
+        if(teamCodes!= null) {
+            LookupDefaultListResult<TeamListVO<CountOfPeriodVO>>
+                    requestVO = getService.getOrderCountsByTeam(order, teamCodes, target_date, PeriodIntervalType.MONTH);
+            return requestVO;
+        }
+        else {
+            LookupDefaultListResult<CountOfPeriodVO>
+                    requestVO = getService.getOrderCounts(order ,target_date, PeriodIntervalType.MONTH);
+            return requestVO;
+        }
     }
 }

@@ -7,7 +7,6 @@ import com.mumuni.springboot_web.rest_lookup.type.DayType;
 import com.mumuni.springboot_web.rest_lookup.type.PeriodIntervalType;
 import com.mumuni.springboot_web.rest_lookup.vo.CountOfPeriodVO;
 import com.mumuni.springboot_web.rest_lookup.vo.TeamListVO;
-import com.mumuni.springboot_web.rest_lookup.vo.TeamVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,7 +15,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -120,6 +118,68 @@ public class OrderGetService {
         return vo;
     }
 
+    public LookupDefaultListResult<CountOfPeriodVO> getOrderCounts(
+            String order, LocalDate date, PeriodIntervalType type) {
+        LookupDefaultListResult<CountOfPeriodVO> vo;
+        String dateFormat;
+        try {
+            LocalDate startDate, endDate;
+            switch(type) {
+                case MONTH:
+                    startDate = date.withMonth(1).withDayOfMonth(1);
+                    endDate = date.plusYears(1).withMonth(1).withDayOfMonth(1);
+                    dateFormat = "%Y-%m";
+                    break;
+                case DAY:
+                    startDate = date.withDayOfMonth(1);
+                    endDate = date.plusMonths(1).withDayOfMonth(1);
+                    dateFormat = "%Y-%m-%d";
+                    break;
+                default:
+                    throw new Exception("Unknown PeriodIntervalType : " + type);
+            }
+
+            HashMap<String,Object> map = new HashMap<>();
+            map.put("startDate", startDate.toString());
+            map.put("endDate", endDate.toString());
+            map.put("dateFormat", dateFormat);
+
+            List<CountOfPeriodVO> data = lookupMapper.getConnectionCounts(map);
+
+            Iterator<CountOfPeriodVO> itr = data.iterator();
+            while(itr.hasNext()) {
+                itr.next().setIntervalType(type);
+            }
+
+            vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
+                    .resultCode(200)
+                    .order("connect")
+                    .requestTime(LocalDateTime.now())
+                    .data(data)
+                    .totalCount(data.size())
+                    .build();
+            log.info("Success to run getOrderCounts");
+        }catch(DateTimeParseException e) {
+            vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
+                    .resultCode(410)
+                    .order("*")
+                    .requestTime(LocalDateTime.now())
+                    .data(null)
+                    .totalCount(0)
+                    .build();
+            log.error("Fail to run getOrderCounts -> ", e);
+        }catch (Exception e) {
+            vo = LookupDefaultListResult.<CountOfPeriodVO> builder()
+                    .resultCode(444)
+                    .order("*")
+                    .requestTime(LocalDateTime.now())
+                    .data(null)
+                    .totalCount(0)
+                    .build();
+            log.error("Fail to run getOrderCounts -> ", e);
+        }
+        return vo;
+    }
     public LookupDefaultListResult<TeamListVO<CountOfPeriodVO>> getOrderCountsByTeam(
             String order, List<String> teamCodes, LocalDate date, PeriodIntervalType type) {
         LookupDefaultListResult<TeamListVO<CountOfPeriodVO>> vo;
