@@ -21,11 +21,11 @@ https://app.gitbook.com/@ohj8447/s/comento-springboot-web-api/
 ### 추가과제)3. HTTP 추가 공부
 - https://velog.io/@mumuni/HTTP-간단-정리
 
-### 기타
-
 ## 4주차 : 서비스 추가 구현 및 API 문서 수정
 - API 문서 수정 (OK)
 - BOARD CRUD 추가(OK)
+
+## 기록
 
 #### december 13
 - TODO: 
@@ -60,4 +60,5 @@ https://app.gitbook.com/@ohj8447/s/comento-springboot-web-api/
  - 부서별 월별 로그인 수 서비스 추가
  - .properties 파일 분리
  - Board CRUD 구현
- - api 문서 수
+ - api 문서 수정
+ - db create table script 추가
