@@ -1,4 +1,6 @@
 # Comento 실습과제
+## API 문서
+https://app.gitbook.com/@ohj8447/s/comento-springboot-web-api/
 
 ## 3주차 : sql문 실습 및 Restapi 구현
 
@@ -14,12 +16,16 @@
 - 일자별 접속자 수 (OK)
 - 평균 하루 로그인 수 (OK)
 - 휴일을 제외한 로그인 수 (OK)
-- 부서별 월별 로그인 수 (NO)
+- 부서별 월별 로그인 수 (OK)
 
 ### 추가과제)3. HTTP 추가 공부
-- 
+- https://velog.io/@mumuni/HTTP-간단-정리
 
 ### 기타
+
+## 4주차 : 서비스 추가 구현 및 API 문서 수정
+- API 문서 수정 (OK)
+- BOARD CRUD 추가(OK)
 
 #### december 13
 - TODO: 
@@ -48,3 +54,10 @@
 #### december 18
 - 변경점 (develop, master branch)
  - Lookup service, sql refactoring
+ 
+#### december 20
+- 변경점 (master branch)
+ - 부서별 월별 로그인 수 서비스 추가
+ - .properties 파일 분리
+ - Board CRUD 구현
+ - api 문서 수
