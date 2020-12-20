@@ -32,4 +32,29 @@
 		and CREATE_DATE>= #{startDate} AND #{endDate} > CREATE_DATE
         group by create_at;
 	</select>
+	
+	<resultMap id="getOrderCountByTeamResultMap" type="TeamListVO">
+		<result property="team_name" column="TEAMNAME"/>
+		<result property="team_code" column="TEAMCODE"/>
+
+		<collection property="data" ofType="CountOfPeriodVO">
+			<result property="total_count" column="total_count"/>
+			<result property="create_at" column="create_at"/>
+		</collection>
+	</resultMap>
+	
+	<select id="getOrderCountsByTeam" parameterType="map" resultMap="getOrderCountByTeamResultMap">
+		select count(*) as total_count, t.TEAMNAME, t.TEAMCODE, date_format(r.CREATE_DATE, #{dateFormat}) as create_at
+		from REQUESTHISTORY_TB as r
+			inner join USERINFO_TB as u on r.USERID = u.USERID
+			inner join TEAMINFO_TB as t on u.TEAMCODE = t.TEAMCODE
+			inner join REQUESTCODEINFO_TB as c on c.REQUESTCODE = r.REQUESTCODE
+		and c.CODEEXPLAIN like #{order}
+		and r.CREATE_DATE >= #{startDate} and  #{endDate} > r.CREATE_DATE
+		and
+		<foreach item="team_code" index="index" collection="teamCodes" separator="or">
+			t.TEAMCODE like #{team_code}
+		</foreach>
+		group by create_at, t.TEAMNAME, t.TEAMCODE order by TEAMCODE, create_at;
+	</select>
 </mapper>
