@@ -4,7 +4,7 @@
 
 <mapper namespace="com.mumuni.springboot_web.dao.LookupMapper">
     <select id="getConnectionCounts" parameterType="map" resultType="CountOfPeriodVO">
-        select DATE_FORMAT(A.CREATE_DATE,#{dateFormat}) as create_at, COUNT(distinct A.USERID) as totalcount
+        select DATE_FORMAT(A.CREATE_DATE,#{dateFormat}) as create_at, COUNT(distinct A.USERID) as total_count
         from REQUESTHISTORY_TB as A
         where A.CREATE_DATE > #{startDate} AND #{endDate} > A.CREATE_DATE
         group by create_at;
