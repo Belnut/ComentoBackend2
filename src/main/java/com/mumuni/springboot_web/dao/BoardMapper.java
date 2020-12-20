@@ -13,7 +13,7 @@ public interface BoardMapper {
             "(`ID`, `TITLE`, `USERID`, `CONTENT`, `CREATE_DATE`, `UPDATE_DATE`)",
             "VALUES ( null,'${title}', '${author.user_id}', '${content}', NOW(), NOW())"
     })
-    @SelectKey(statement ="SELECT LAST_INSERT_ID()", keyProperty="id", keyColumn = "ID", before = false, resultType=int.class)
+    @Options(useGeneratedKeys=true, keyProperty = "id")
     int insertPost(FreeBoardVO vo);
 
     @Update({
