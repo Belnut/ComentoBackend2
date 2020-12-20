@@ -94,7 +94,7 @@ public class FreeboardService {
             if(data == null) {
                 vo = BoardDefaultSingleResult.<FreeBoardVO>builder()
                         .resultCode(404)
-                        .order("getPost")
+                        .order("Get Post")
                         .requestTime(LocalDateTime.now())
                         .data(null)
                         .build();
@@ -103,7 +103,7 @@ public class FreeboardService {
             else {
                 vo = BoardDefaultSingleResult.<FreeBoardVO>builder()
                         .resultCode(200)
-                        .order("connect")
+                        .order("Get Post")
                         .requestTime(LocalDateTime.now())
                         .data(data)
                         .build();
